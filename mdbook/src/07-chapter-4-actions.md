@@ -4,6 +4,72 @@
 
 > **Scenario:** Your `doc-rag` service runs unit tests on every PR, evaluates retrieval quality nightly, builds a Docker image on every release, and deploys to Azure Container Apps via OIDC — no long-lived secrets anywhere.
 
+### 🧒 If you were 10 years old
+
+Imagine you have **a robot in your school locker**. Every time you put a finished essay in the locker, the robot:
+
+1. Spell-checks it.
+2. Prints out 3 copies.
+3. Mails one to the teacher.
+4. Pins one on the classroom wall.
+5. Emails your parents *"essay submitted!"*
+
+You never asked it to do all that *this time* — you set it up once, and now it happens **every single time** you drop something in the locker.
+
+**GitHub Actions is that robot**, but for code. You write one YAML file describing the chores, and GitHub does them automatically on every push, every pull request, every night at 2 AM — whatever you ask.
+
+### 🌍 Real-world situation — when to use this
+
+**Situation:** Every time someone pushes code to your RAG repo, you want to (1) run tests, (2) build a Docker image, (3) evaluate the model, and (4) deploy to Azure — but only if main is green and a human approves production. This is the *core* CI/CD workflow:
+
+```yaml
+# .github/workflows/ship.yml
+name: Ship
+on:
+  push: { branches: [main] }
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  id-token: write          # for passwordless Azure login (OIDC)
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: '3.12', cache: pip }
+      - run: pip install -r requirements.txt
+      - run: pytest -q
+
+  eval:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: python eval.py --quick > eval.json
+      - run: echo "### Eval results" >> $GITHUB_STEP_SUMMARY
+      - run: cat eval.json >> $GITHUB_STEP_SUMMARY
+
+  deploy:
+    needs: [test, eval]
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    environment: production      # requires reviewer approval
+    steps:
+      - uses: azure/login@v2
+        with:
+          client-id:       ${{ vars.AZURE_CLIENT_ID }}
+          tenant-id:       ${{ vars.AZURE_TENANT_ID }}
+          subscription-id: ${{ vars.AZURE_SUBSCRIPTION_ID }}
+      - run: az containerapp up -g rag-rg -n doc-rag
+              --image ghcr.io/${{ github.repository }}:${{ github.sha }}
+```
+
+The robot now runs **every push, in the same way, forever** — no more *"works on my machine."*
+
 ## 4.1 The anatomy of a workflow
 
 A workflow is a YAML file in `.github/workflows/`. It contains:
@@ -365,7 +431,7 @@ jobs:
 9. What's the GitHub-recommended replacement for storing long-lived Azure creds in secrets?
 10. Where can you NOT run a Docker container action?
 
-Answers in [Phase4_GitHub_Actions/exercises.md](Phase4_GitHub_Actions/exercises.md).
+Answers in [Phase4_GitHub_Actions/exercises.md](https://github.com/mail2raji/github-copilot-handbook/blob/main/Phase4_GitHub_Actions/exercises.md).
 
 ## 4.15 Exercises (do all 10)
 

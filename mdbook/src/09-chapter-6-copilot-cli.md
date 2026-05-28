@@ -4,6 +4,49 @@
 
 > **Scenario:** You are spending too much time in the terminal building, evaluating, and deploying agents. The Copilot CLI gives you natural-language → shell on every command.
 
+### 🧒 If you were 10 years old
+
+You know that scary black window with white text where grown-ups type weird spells like `ls -la | grep "*.py"`?
+
+**Copilot CLI is a translator** between English and those spells.
+
+- You type, *"show me every Python file in this folder."* It writes the spell.
+- You read a scary spell someone else wrote and ask, *"what does this do?"* It explains in plain English.
+- If a spell looks dangerous (like *"delete everything"*), it pauses and asks, *"are you SURE?"* before running it.
+
+It's like having a wizard friend whispering, *"this spell is safe — say it like this."*
+
+### 🌍 Real-world situation — when to use this
+
+**Situation:** You're SSH'd into a Linux box to debug a stuck training job. You need to find which Docker container is using the most GPU memory. You don't remember the command. You have 30 seconds before the call starts.
+
+```powershell
+# Ask in plain English
+gh copilot suggest "list docker containers using GPU, sorted by GPU memory descending"
+```
+
+Copilot suggests:
+
+```bash
+nvidia-smi --query-compute-apps=pid,used_memory --format=csv \
+  | sort -k2 -h -r
+```
+
+Not satisfied? Ask for an explanation before running:
+
+```powershell
+gh copilot explain "nvidia-smi --query-compute-apps=pid,used_memory --format=csv"
+```
+
+Now you understand it AND you ran it. You also save it as a permanent alias so you never forget:
+
+```powershell
+gh copilot alias --shell pwsh -- "gpustats" "nvidia-smi --query-compute-apps=pid,used_memory --format=csv | sort -k2 -h -r"
+# now just type:  gpustats
+```
+
+You turned a *"how do I…?"* moment into a 30-second answer and a permanent shortcut.
+
 ## 6.1 Install + smoke test
 
 ```powershell
@@ -152,7 +195,7 @@ ghcs -t gh "list workflow runs for environment 'production' in the last 7 days w
 9. How do you install the `ghcs` / `ghce` aliases?
 10. Should you blindly run a CLI suggestion in production?
 
-Answers in [Phase6_Copilot_CLI/exercises.md](Phase6_Copilot_CLI/exercises.md).
+Answers in [Phase6_Copilot_CLI/exercises.md](https://github.com/mail2raji/github-copilot-handbook/blob/main/Phase6_Copilot_CLI/exercises.md).
 
 ## 6.10 Exercises (do all 8)
 

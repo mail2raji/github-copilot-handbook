@@ -18,7 +18,7 @@ This handbook bridges that gap. It is:
 
 - **Hands-on.** Every concept ships with commands you can run on Windows (PowerShell) and macOS/Linux (bash).
 - **Real-world.** Every chapter uses scenarios from GenAI / agentic engineering: deploying a RAG service, CI for an agent, code review with Copilot, secret scanning for OpenAI keys.
-- **Exam-aligned.** Mapped 1:1 to the public blueprints of five GitHub exams (see [EXAM_BLUEPRINT.md](EXAM_BLUEPRINT.md)).
+- **Exam-aligned.** Mapped 1:1 to the public blueprints of five GitHub exams (see [EXAM_BLUEPRINT.md](https://github.com/mail2raji/github-copilot-handbook/blob/main/EXAM_BLUEPRINT.md)).
 - **Architect-shaped.** Every phase ends with "when do you choose this?" and "what goes wrong in production?", so you can defend a design, not just memorize one.
 
 ## Who this book is for

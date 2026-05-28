@@ -4,6 +4,41 @@
 
 > **Scenario:** Your RAG service is now a team project. You will keep history clean across many parallel feature branches, recover deleted commits, bisect a regression in retrieval accuracy, and pre-commit-block accidentally committed OpenAI keys.
 
+### 🧒 If you were 10 years old
+
+Imagine you and a friend are both writing chapters of the same comic book at the same time.
+
+- **`git merge`** is like glueing both of your chapters into one comic in order: *"Here is mine, here is yours, then a glue page that says we joined them."*
+- **`git rebase`** is like asking, *"Hey, what if I redrew my chapter so it pretends I drew it AFTER yours, with no glue page?"* Cleaner — but you must redraw carefully.
+- **`git cherry-pick`** is *"I love just this one panel of your chapter — let me copy it into mine."*
+- **`git stash`** is *"My mom called dinner — let me toss these half-finished panels into a drawer for later."*
+- **`git reflog`** is the **secret diary of every move you made**, so you can always rewind, even if you tore the page out.
+- **`git bisect`** is *"Somewhere between page 1 and page 50, the comic stopped being funny. Let me jump to page 25, check, then page 12, then page 6..."* — a smart binary search.
+
+These tools let you **never panic** when team comics get messy.
+
+### 🌍 Real-world situation — when to use this
+
+**Situation:** A nightly evaluation just dropped accuracy from 92% to 78%. You don't know which of the last 40 commits broke it. With `git bisect`, you find the culprit in 6 tries:
+
+```powershell
+# Tell Git: this commit is bad, that one was good.
+git bisect start
+git bisect bad  HEAD
+git bisect good v0.5.0
+
+# Git now checks out a commit halfway between them.
+# Run the eval. If accuracy <90%, mark bad; else good.
+python eval.py --quick
+git bisect bad     # or: git bisect good
+
+# Repeat 5 more times — Git narrows it down logarithmically.
+# Final output: "abc1234 is the first bad commit"
+git bisect reset
+```
+
+Without `bisect`, you'd be checking commits one at a time for hours. With it, you find the broken commit in **log₂(40) ≈ 6 steps**.
+
 ## 3.1 Rebase vs merge — when to choose which
 
 Both bring two branches together. They produce *different history*.
@@ -254,7 +289,7 @@ git push
 9. Submodule vs subtree — which one absorbs the foreign history?
 10. Where do LFS binaries actually live?
 
-Answers in [Phase3_Intermediate_Git/exercises.md](Phase3_Intermediate_Git/exercises.md).
+Answers in [Phase3_Intermediate_Git/exercises.md](https://github.com/mail2raji/github-copilot-handbook/blob/main/Phase3_Intermediate_Git/exercises.md).
 
 ## 3.13 Exercises (do all 8)
 

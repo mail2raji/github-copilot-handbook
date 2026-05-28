@@ -132,6 +132,33 @@ Estimated effort: 40–80 hours of focused practice across all five certificatio
 
 > **You will:** install Git, GitHub CLI, VS Code, GitHub Copilot, and GitHub Copilot CLI, then prove they work by making your first commit and asking Copilot a question.
 
+### 🧒 If you were 10 years old
+
+Imagine you are building a giant Lego castle. Every time you finish a part, you take a photo of it. If you knock it over, you can rebuild it from the photo. **Git is the camera.** **GitHub is the cloud album** where the photos live, so you and your friends can both see them.
+
+- **Git** = the camera on your desk.
+- **GitHub** = the photo album online.
+- **GitHub Copilot** = a smart helper sitting next to you, suggesting which Lego brick to use next.
+- **GitHub Copilot CLI** = the same helper, but in the terminal — like a magic typewriter that knows commands.
+
+Once all four are installed, you can build, save, share, and get help — never alone.
+
+### 🌍 Real-world situation — when to use this
+
+**Situation:** You just joined a new team building a chatbot. The senior engineer says *"clone the repo, make your branch, push your first PR by end of week."* You panic — none of those words are in your vocabulary yet.
+
+**What this chapter does:** by the end of Setup, you can run all of these and they just work:
+
+```powershell
+git clone https://github.com/the-team/chatbot.git
+cd chatbot
+git switch -c feat/improve-greeting
+code .                            # opens the project; Copilot starts suggesting
+gh copilot suggest "create a Python venv and install requirements"
+```
+
+You are now ready to type, save, and ship code on day 1.
+
 ## 0.1 Install Git
 
 Git is the version-control engine. It is **local-first**: every commit happens on your laptop, before anything reaches GitHub.
@@ -235,6 +262,39 @@ gh copilot suggest "create a python virtual environment and install openai"
 > **You will:** learn the 20 Git commands that cover 99% of daily work, the mental model that makes them click, and the real-world GenAI workflows where each one shines.
 
 > **Scenario:** You are building a small RAG (Retrieval Augmented Generation) service that answers internal documentation questions. You version-control the code, isolate experiments on branches, and recover from a bad commit — all without leaving the terminal.
+
+### 🧒 If you were 10 years old
+
+Think of Git as your homework notebook with **magical save-points**.
+
+- Every time you finish a sentence you want to keep, you say **`git add`** — that's putting the page on your teacher's desk.
+- When the teacher stamps the page, you say **`git commit`** — now it is officially saved.
+- If your dog scribbles on the page later, you say **`git checkout`** — the magical eraser brings the stamped version back.
+- If you want to try a different ending to your story without ruining the original, you say **`git switch -c alt-ending`** — that's a parallel notebook, just for the experiment.
+- When the experiment works, you **merge** it back. When it doesn't, you delete that notebook and the original is untouched.
+
+Git is *time travel + parallel universes* for your homework.
+
+### 🌍 Real-world situation — when to use this
+
+**Situation:** You are tweaking the RAG retrieval prompt. Version 1 returns 60% accuracy. You try version 2 (with HyDE). It dips to 55%. Without Git, you'd have to re-type version 1 from memory. With Git, you do:
+
+```powershell
+# I'm happy with the current code — stamp it.
+git add src/retriever.py
+git commit -m "baseline retriever — 60% accuracy on eval set"
+
+# Try a risky experiment on a side branch.
+git switch -c experiment/hyde-retrieval
+# ...edit, run eval...
+git add -A; git commit -m "HyDE retrieval — drops to 55%"
+
+# Experiment failed. Throw it away and return to the good version.
+git switch main
+git branch -D experiment/hyde-retrieval
+```
+
+You kept the working code, tried something bold, and recovered in 3 seconds. **Git is your safety net for every experiment.**
 
 ## 1.1 The Git mental model — three trees and one graph
 
@@ -438,6 +498,48 @@ Answers in [Phase1_Git_Fundamentals/exercises.md](Phase1_Git_Fundamentals/exerci
 > **You will:** use a *GitHub* repository (not just a Git repo) like a senior engineer — issues, PRs, code review, forks, releases, projects, discussions, and the social conventions that go with them.
 
 > **Scenario:** You collaborate with a teammate on the RAG service. You open issues, raise PRs, review them, merge with the right strategy, cut a release, and use a Project board to track everything.
+
+### 🧒 If you were 10 years old
+
+Think of GitHub as **Google Docs for code**, but with extra superpowers:
+
+- A **repository** is one Google Doc — the project.
+- An **issue** is a sticky note on the doc: *"please fix the typo on page 3."*
+- A **pull request** is when you write the fix on a copy of the doc and ask, *"can my fix replace the original page 3?"* — a friend reviews it before saying yes.
+- A **fork** is when you take the whole doc home, change it however you like, and only show the changes you want to share.
+- A **release** is when you stamp a version: *"This is the storybook we read at the school play. Don't touch it."*
+- A **project board** is the To-Do / Doing / Done columns on the classroom whiteboard.
+
+You and your friends can work on the same project at the same time *without* sending zip files back and forth.
+
+### 🌍 Real-world situation — when to use this
+
+**Situation:** Your teammate added a new evaluation script but it broke the CI. You file an issue, fix it on a branch, open a PR, request your teammate's review, merge it, and tag a release — all from the terminal:
+
+```powershell
+# 1. File the bug as an issue
+gh issue create --title "eval.py crashes on empty results" \
+                --body  "Stack trace shows IndexError when retrieval returns 0 docs." \
+                --label bug
+
+# 2. Branch + fix
+git switch -c fix/eval-empty-results
+# ...edit eval.py...
+git commit -am "fix(eval): guard against empty result list"
+git push -u origin fix/eval-empty-results
+
+# 3. Open the PR, request review, watch checks
+gh pr create --fill --reviewer teammate-handle
+gh pr checks --watch
+
+# 4. Once approved + green, merge with a clean history
+gh pr merge --squash --delete-branch
+
+# 5. Cut a release
+gh release create v0.2.1 --notes "Fixes empty-results crash in eval.py"
+```
+
+That's the full **collaborative loop** — and you never left the terminal.
 
 ## 2.1 The four GitHub object types you must know
 
@@ -646,6 +748,41 @@ Answers in [Phase2_GitHub_Basics/exercises.md](Phase2_GitHub_Basics/exercises.md
 > **You will:** master rebase, cherry-pick, stash, reflog, bisect, submodules, worktrees, hooks, and history-rewrite — the commands that separate a *junior* from a *senior* engineer.
 
 > **Scenario:** Your RAG service is now a team project. You will keep history clean across many parallel feature branches, recover deleted commits, bisect a regression in retrieval accuracy, and pre-commit-block accidentally committed OpenAI keys.
+
+### 🧒 If you were 10 years old
+
+Imagine you and a friend are both writing chapters of the same comic book at the same time.
+
+- **`git merge`** is like glueing both of your chapters into one comic in order: *"Here is mine, here is yours, then a glue page that says we joined them."*
+- **`git rebase`** is like asking, *"Hey, what if I redrew my chapter so it pretends I drew it AFTER yours, with no glue page?"* Cleaner — but you must redraw carefully.
+- **`git cherry-pick`** is *"I love just this one panel of your chapter — let me copy it into mine."*
+- **`git stash`** is *"My mom called dinner — let me toss these half-finished panels into a drawer for later."*
+- **`git reflog`** is the **secret diary of every move you made**, so you can always rewind, even if you tore the page out.
+- **`git bisect`** is *"Somewhere between page 1 and page 50, the comic stopped being funny. Let me jump to page 25, check, then page 12, then page 6..."* — a smart binary search.
+
+These tools let you **never panic** when team comics get messy.
+
+### 🌍 Real-world situation — when to use this
+
+**Situation:** A nightly evaluation just dropped accuracy from 92% to 78%. You don't know which of the last 40 commits broke it. With `git bisect`, you find the culprit in 6 tries:
+
+```powershell
+# Tell Git: this commit is bad, that one was good.
+git bisect start
+git bisect bad  HEAD
+git bisect good v0.5.0
+
+# Git now checks out a commit halfway between them.
+# Run the eval. If accuracy <90%, mark bad; else good.
+python eval.py --quick
+git bisect bad     # or: git bisect good
+
+# Repeat 5 more times — Git narrows it down logarithmically.
+# Final output: "abc1234 is the first bad commit"
+git bisect reset
+```
+
+Without `bisect`, you'd be checking commits one at a time for hours. With it, you find the broken commit in **log₂(40) ≈ 6 steps**.
 
 ## 3.1 Rebase vs merge — when to choose which
 
@@ -919,6 +1056,72 @@ Answers in [Phase3_Intermediate_Git/exercises.md](Phase3_Intermediate_Git/exerci
 > **You will:** master GitHub Actions — workflows, jobs, steps, runners, matrix builds, secrets, environments, reusable workflows, composite actions, OIDC federation to Azure, and how to ship an AI agent on every push.
 
 > **Scenario:** Your `doc-rag` service runs unit tests on every PR, evaluates retrieval quality nightly, builds a Docker image on every release, and deploys to Azure Container Apps via OIDC — no long-lived secrets anywhere.
+
+### 🧒 If you were 10 years old
+
+Imagine you have **a robot in your school locker**. Every time you put a finished essay in the locker, the robot:
+
+1. Spell-checks it.
+2. Prints out 3 copies.
+3. Mails one to the teacher.
+4. Pins one on the classroom wall.
+5. Emails your parents *"essay submitted!"*
+
+You never asked it to do all that *this time* — you set it up once, and now it happens **every single time** you drop something in the locker.
+
+**GitHub Actions is that robot**, but for code. You write one YAML file describing the chores, and GitHub does them automatically on every push, every pull request, every night at 2 AM — whatever you ask.
+
+### 🌍 Real-world situation — when to use this
+
+**Situation:** Every time someone pushes code to your RAG repo, you want to (1) run tests, (2) build a Docker image, (3) evaluate the model, and (4) deploy to Azure — but only if main is green and a human approves production. This is the *core* CI/CD workflow:
+
+```yaml
+# .github/workflows/ship.yml
+name: Ship
+on:
+  push: { branches: [main] }
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  id-token: write          # for passwordless Azure login (OIDC)
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: '3.12', cache: pip }
+      - run: pip install -r requirements.txt
+      - run: pytest -q
+
+  eval:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: python eval.py --quick > eval.json
+      - run: echo "### Eval results" >> $GITHUB_STEP_SUMMARY
+      - run: cat eval.json >> $GITHUB_STEP_SUMMARY
+
+  deploy:
+    needs: [test, eval]
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    environment: production      # requires reviewer approval
+    steps:
+      - uses: azure/login@v2
+        with:
+          client-id:       ${{ vars.AZURE_CLIENT_ID }}
+          tenant-id:       ${{ vars.AZURE_TENANT_ID }}
+          subscription-id: ${{ vars.AZURE_SUBSCRIPTION_ID }}
+      - run: az containerapp up -g rag-rg -n doc-rag
+              --image ghcr.io/${{ github.repository }}:${{ github.sha }}
+```
+
+The robot now runs **every push, in the same way, forever** — no more *"works on my machine."*
 
 ## 4.1 The anatomy of a workflow
 
@@ -1308,6 +1511,46 @@ Answers in [Phase4_GitHub_Actions/exercises.md](Phase4_GitHub_Actions/exercises.
 
 This chapter is also the **largest** because it owns the majority of the **GitHub Copilot certification**.
 
+### 🧒 If you were 10 years old
+
+Picture a **super-smart parrot sitting on your shoulder** while you draw and write.
+
+- When you start drawing a cat, the parrot whispers *"add whiskers like this!"* — that's **inline completion** (gray ghost text).
+- When you stop and ask *"hey parrot, what's a cool name for my cat?"*, the parrot answers — that's **Copilot Chat**.
+- When you say *"parrot, draw the whole cat by yourself, then bring it back for me to look at"*, the parrot flies off, does the work, and shows you the result — that's **Agent mode**.
+- When you say *"parrot, every time I draw, always use crayons not pencils"*, the parrot remembers — that's a **custom instructions file**.
+- When you keep a list of favorite drawings, the parrot can copy that exact style — that's a **prompt file**.
+
+The parrot is helpful, but **you are still the artist**: you decide what to keep.
+
+### 🌍 Real-world situation — when to use this
+
+**Situation:** You need to write a Python function that retrieves docs, asks an LLM to answer, and *also* writes a unit test. Three Copilot surfaces solve this in three minutes:
+
+```python
+# 1. INLINE COMPLETION — type the docstring; Copilot writes the body.
+def answer_question(query: str, top_k: int = 5) -> str:
+    """Retrieve top-k docs from Qdrant and ask GPT-4o-mini to answer the query.
+    Returns a citation-grounded answer.
+    """
+    # <Tab to accept Copilot's suggestion>
+    docs = qdrant.search(query, limit=top_k)
+    context = "\n\n".join(d.payload["text"] for d in docs)
+    prompt = f"Use ONLY this context:\n{context}\n\nQuestion: {query}"
+    return openai.chat.completions.create(
+        model="gpt-4o-mini",
+        messages=[{"role": "user", "content": prompt}],
+    ).choices[0].message.content
+```
+
+Then:
+
+- **Inline chat (`Ctrl+I`)** on the function → *"add citation numbers to every paragraph in the answer."* Copilot edits in-place.
+- **Side chat (`Ctrl+Alt+I`)** → *"write a pytest that mocks both Qdrant and OpenAI and asserts the citation count."* Copilot writes the test file.
+- **Agent mode** → *"add this feature end-to-end: update the API, write tests, update README, open a PR."* It plans, edits multiple files, and stops for your approval.
+
+The parrot doesn't *replace* you — it makes you 5× faster.
+
 ## 5.1 Plans and features — what you get
 
 | Plan | Audience | Includes |
@@ -1608,6 +1851,49 @@ Answers in [Phase5_Copilot_GenAI/exercises.md](Phase5_Copilot_GenAI/exercises.md
 
 > **Scenario:** You are spending too much time in the terminal building, evaluating, and deploying agents. The Copilot CLI gives you natural-language → shell on every command.
 
+### 🧒 If you were 10 years old
+
+You know that scary black window with white text where grown-ups type weird spells like `ls -la | grep "*.py"`?
+
+**Copilot CLI is a translator** between English and those spells.
+
+- You type, *"show me every Python file in this folder."* It writes the spell.
+- You read a scary spell someone else wrote and ask, *"what does this do?"* It explains in plain English.
+- If a spell looks dangerous (like *"delete everything"*), it pauses and asks, *"are you SURE?"* before running it.
+
+It's like having a wizard friend whispering, *"this spell is safe — say it like this."*
+
+### 🌍 Real-world situation — when to use this
+
+**Situation:** You're SSH'd into a Linux box to debug a stuck training job. You need to find which Docker container is using the most GPU memory. You don't remember the command. You have 30 seconds before the call starts.
+
+```powershell
+# Ask in plain English
+gh copilot suggest "list docker containers using GPU, sorted by GPU memory descending"
+```
+
+Copilot suggests:
+
+```bash
+nvidia-smi --query-compute-apps=pid,used_memory --format=csv \
+  | sort -k2 -h -r
+```
+
+Not satisfied? Ask for an explanation before running:
+
+```powershell
+gh copilot explain "nvidia-smi --query-compute-apps=pid,used_memory --format=csv"
+```
+
+Now you understand it AND you ran it. You also save it as a permanent alias so you never forget:
+
+```powershell
+gh copilot alias --shell pwsh -- "gpustats" "nvidia-smi --query-compute-apps=pid,used_memory --format=csv | sort -k2 -h -r"
+# now just type:  gpustats
+```
+
+You turned a *"how do I…?"* moment into a 30-second answer and a permanent shortcut.
+
 ## 6.1 Install + smoke test
 
 ```powershell
@@ -1778,6 +2064,64 @@ Answers in [Phase6_Copilot_CLI/exercises.md](Phase6_Copilot_CLI/exercises.md).
 > **You will:** turn Copilot into a planner/executor for *your* tools by writing **Model Context Protocol (MCP) servers**, **skills**, and **prompt files**. You'll also learn the patterns that show up in advanced Copilot exam scenarios.
 
 > **Scenario:** Your team has 10 internal tools (Jira, ServiceNow, Splunk, Snyk, internal APIs). Instead of writing a custom agent from scratch, you let Copilot's agent mode call them via MCP. Copilot becomes the cockpit; your repo + MCP servers become the toolbelt.
+
+### 🧒 If you were 10 years old
+
+Imagine you have a robot friend who is **really smart but has no hands**. You give the robot tools:
+
+- A **calculator** (for math).
+- A **dictionary** (for word meanings).
+- A **notepad** (for remembering).
+- A **walkie-talkie to mom** (for asking permission before doing big things).
+
+Now when you say, *"robot, do my math homework,"* the robot **plans** the steps, picks up the **calculator**, writes answers in the **notepad**, and if it's about to do something risky, **buzzes mom** first.
+
+That handing-out-tools system is called **MCP — the Model Context Protocol**. It is the same plug for *every* AI tool, so the robot doesn't need to relearn each one.
+
+- **Tool** = something the robot can *do* (e.g. "send email").
+- **Resource** = something the robot can *read* (e.g. "my homework PDF").
+- **Prompt** = a saved instruction (e.g. "always answer politely").
+- **Skill** = an instruction the robot picks up automatically when the situation matches.
+
+You go from a smart robot that just talks → a smart robot that **gets things done safely**.
+
+### 🌍 Real-world situation — when to use this
+
+**Situation:** When a new GitHub issue is opened in your team's repo, you want Copilot to: read the issue → check the codebase → suggest a label → assign to the right person — *without* you doing anything.
+
+Step 1 — register an MCP server in `.vscode/mcp.json`:
+
+```json
+{
+  "servers": {
+    "github": {
+      "command": "docker",
+      "args": ["run","-i","--rm","-e","GITHUB_PERSONAL_ACCESS_TOKEN","ghcr.io/github/github-mcp-server"],
+      "env": { "GITHUB_PERSONAL_ACCESS_TOKEN": "${input:gh_token}" }
+    }
+  }
+}
+```
+
+Step 2 — write a skill file Copilot picks up automatically:
+
+```markdown
+---
+name: triage-issue
+description: Triage a newly opened GitHub issue. Reads the issue, picks 1-3 labels, suggests assignee.
+---
+
+# Triage skill
+
+When the user asks to triage issue #N:
+
+1. Use the `github` MCP tool to read issue #N (title, body, comments).
+2. Read CODEOWNERS to find the right team.
+3. Pick 1-3 labels from: bug | feature | docs | question | needs-info.
+4. Post a comment summarizing your triage. **DO NOT** label or assign without my approval.
+```
+
+Step 3 — in Copilot Agent mode, just say: *"triage issue 42."* The agent plans, calls the GitHub tool, drafts the comment, and asks for your go-ahead before posting. You went from *manually triaging* to *one-line oversight*.
 
 ## 7.1 The agent loop — the only diagram you must memorize
 
@@ -2065,6 +2409,51 @@ Answers in [Phase7_Agentic_AI_Copilot/exercises.md](Phase7_Agentic_AI_Copilot/ex
 > **You will:** secure your AI repos with **secret scanning** (with custom patterns for `sk-…` keys), **code scanning** (CodeQL), **Dependabot**, **push protection**, and **security overview** — then **administer** an org/enterprise with SSO, SCIM, teams, audit log, rulesets, and Actions policies.
 
 This chapter owns the **GHAS** and **Administration** certifications. It is intentionally long.
+
+### 🧒 If you were 10 years old
+
+Think of GHAS + Admin as the **safety system in your school**:
+
+- **Secret scanning** = the metal detector at the door. If anyone tries to bring something dangerous (an API key), it beeps.
+- **Push protection** = the door **just won't open** until you put the dangerous thing away. Better than beeping after the fact.
+- **CodeQL (code scanning)** = the X-ray machine that looks for hidden bugs inside your bag (your code), not just on the outside.
+- **Dependabot** = the parent who checks every toy you bring home for recalls and tells you, *"that one was found unsafe last week — here's a replacement."*
+- **SSO** = the school ID badge. One badge opens every door — no more remembering 10 passwords.
+- **SCIM** = the office that **adds your badge when you join** and **deletes it the day you leave**, automatically.
+- **Audit log** = the security camera footage of every door anyone opened today.
+- **Rulesets** = the school rules posted on every classroom: *"no running, no candy, no merging to main without review."*
+
+The goal: **make safe behavior the default**, not something you have to remember.
+
+### 🌍 Real-world situation — when to use this
+
+**Situation:** A new engineer joins the team, accidentally commits an `OPENAI_API_KEY` in a `.env` file, and pushes. Without GHAS, the key is now visible in your git history forever. *With* push protection enabled:
+
+```text
+remote: error: GH009: Found secret of type "OpenAI API Key" at commit a1b2c3 in src/.env
+remote: To unblock, remove the secret, or visit:
+remote:   https://github.com/org/repo/security/secret-scanning/unblock-secret/...
+remote: Push rejected.
+```
+
+The push is **rejected before it ever lands on GitHub**. The key never enters history. Crisis averted.
+
+Enable it once for the whole org:
+
+```powershell
+# Org-level via API — turn on secret scanning + push protection by default for every repo.
+gh api -X PATCH /orgs/your-org `
+  -F secret_scanning_enabled_for_new_repositories=true `
+  -F secret_scanning_push_protection_enabled_for_new_repositories=true
+
+# Optional: register a custom pattern for your internal vault.
+# Settings -> Code security -> New custom pattern
+# Name:        Internal Vault Token
+# Regex:       \bvlt-[A-Za-z0-9]{32}\b
+# Test string: vlt-AbCdEfGhIjKlMnOpQrStUvWxYz012345
+```
+
+One policy, *every* repo, *every* push. **That** is GHAS doing its job.
 
 ## 8.1 What is GHAS?
 
@@ -2381,6 +2770,41 @@ Answers in [Phase8_GHAS_Admin/exercises.md](Phase8_GHAS_Admin/exercises.md).
 > **You will:** take five mock exams — one for each certification. Each mock is 30 questions, mixing multiple-choice, multi-select, and scenario. Score yourself, then use the *answer + rationale* sections to plug gaps.
 
 > **How to use:** read each question; commit to an answer *before* scrolling to the answers section. Score ≥ 80% to be ready; ≥ 90% to be confident.
+
+### 🧒 If you were 10 years old
+
+Taking a certification exam is like taking a **swimming test** to get the green wristband at the pool.
+
+- You **read about** swimming for weeks (the chapters).
+- You **practice** in the shallow end (the exercises).
+- You take a **mock test** with a parent watching — if you get most laps right, you're ready (these 150 questions).
+- The **real test** at the pool feels easy because you've already done harder ones at home.
+
+The mock exams in this chapter are the *parent-watching* step. Take them seriously: time yourself, no peeking, then review *every* mistake.
+
+### 🌍 Real-world situation — when to use this
+
+**Situation:** You scheduled the **GitHub Foundations** exam for next Saturday. You have 5 days. Here is your 5-day plan using Mock A:
+
+```text
+Mon (60 min) — Take Mock A under exam conditions (no peeking, no Google).
+                Score yourself honestly. Note every wrong answer.
+
+Tue (60 min) — Re-read ONLY the chapter sections that map to the wrong answers.
+                E.g. missed Q3 about staging? Re-read §1.1 "three trees".
+
+Wed (45 min) — Take Mock A AGAIN. Aim for +10% on yesterday's score.
+                If still < 80% on any topic, do that phase's exercises.md drills.
+
+Thu (60 min) — Run through Appendix A cheat sheets out loud.
+                Practice typing the top-20 git commands from memory.
+
+Fri ( 0 min) — REST. Do NOT cram. The brain consolidates overnight.
+
+Sat — Exam. You'll likely score 85-95%. Walk in calm.
+```
+
+The rhythm: *test → diagnose → fix → re-test → rest → ship.*
 
 ---
 
@@ -3275,6 +3699,55 @@ ruleset enforcement: active | evaluate | disabled
 > **You will:** build five production-grade projects that exercise everything in this book — and answer 25 architecture interview questions you will meet on exam day and on the job.
 
 Skip the entire chapter if you only need a pass with thin margin. Do it if you want to *defend* a design — at work and on the certification interview-style scenario questions.
+
+### 🧒 If you were 10 years old
+
+After you've learned a new instrument, you don't say *"I'm done"* — you give a **school concert**. That's the capstone.
+
+This chapter has **five concerts**. Each one is a real, complete project you can show a future boss, a teacher, or a friend. By the end you can point to GitHub and say, *"I built this — go look."*
+
+- Concert 1 = a full AI chatbot service.
+- Concert 2 = a robot that triages tickets while you sleep.
+- Concert 3 = a robot that reviews other people's code politely.
+- Concert 4 = a scoreboard that compares 4 different AI brains every night.
+- Concert 5 = a recipe book of AI tricks anyone can use.
+
+Finishing **one** concert means more than reading the whole book a second time.
+
+### 🌍 Real-world situation — when to use this
+
+**Situation:** You finished Phase 9 and the exam is scheduled. But your hiring manager asks, *"Cool, you passed the exam — but can you actually **build** anything?"* The capstones are your answer.
+
+Minimum viable plan to ship Capstone 1 (RAG service) in **one weekend**:
+
+```powershell
+# Saturday morning — scaffold (2h)
+mkdir doc-rag; cd doc-rag
+gh repo create mail2raji/doc-rag --public --source=. --push
+code .
+# In Copilot Agent mode: "scaffold a FastAPI app with /query and /healthz,
+#                         Dockerfile, pyproject.toml, tests/test_api.py."
+
+# Saturday afternoon — retrieval (3h)
+# Copilot: "add a Qdrant retriever in src/retriever.py with BM25 + embeddings."
+# Copilot: "add tests with mocked Qdrant."
+
+# Saturday evening — CI (1h)
+# Copilot: "add .github/workflows/ci.yml: pytest on push and PR, Python 3.12."
+git add .; git commit -m "feat: scaffold + retrieval"; git push
+
+# Sunday morning — eval + nightly (2h)
+# Copilot: "add scripts/eval.py + .github/workflows/eval-nightly.yml on cron."
+
+# Sunday afternoon — deploy (3h)
+# Copilot: "add infra/main.bicep for Container Apps, and a deploy.yml workflow
+#          that uses OIDC to login to Azure and runs az containerapp up."
+git add .; git commit -m "feat: eval, infra, deploy"; git push
+# Sunday night — tag a v0.1.0 release; share the GitHub URL with your manager.
+gh release create v0.1.0 --generate-notes
+```
+
+By Monday morning you have a working RAG service, on a public repo, with green CI and a v0.1.0 release. **You are now an engineer who shipped**, not a candidate who studied.
 
 ---
 

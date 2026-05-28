@@ -35,6 +35,38 @@ $sections = [ordered]@{
     'appendix-c'        = @{ file = '16-appendix-c.md'; title = 'Appendix C — Further reading' }
 }
 
+# GitHub blob base URL used to rewrite repo-relative links (Phase folders, EXAM_BLUEPRINT, etc.)
+# These files live next to BOOK.md but are NOT part of the mdBook output.
+$RepoBlobBase = 'https://github.com/mail2raji/github-copilot-handbook/blob/main'
+
+# Map BOOK.md section id (anchor) -> rendered mdBook chapter file
+$anchorToFile = @{}
+foreach ($id in $sections.Keys) { $anchorToFile[$id] = $sections[$id].file }
+
+function Rewrite-Links {
+    param([string]$Body)
+
+    # 1) Intra-book anchors: [text](#chapter-4)  ->  [text](07-chapter-4-actions.md)
+    foreach ($anchor in $anchorToFile.Keys) {
+        $target = $anchorToFile[$anchor]
+        $Body = $Body -replace ("\(#" + [regex]::Escape($anchor) + "\)"), "($target)"
+    }
+
+    # 2) Phase folder files: [text](Phase1_Git_Fundamentals/exercises.md)
+    #    point them at the GitHub blob view since the phase folders are not in mdbook/src.
+    $Body = [regex]::Replace($Body,
+        '\((Phase\d+_[A-Za-z_]+/[A-Za-z0-9_.\-]+)\)',
+        { param($m) "($RepoBlobBase/$($m.Groups[1].Value))" })
+
+    # 3) Other repo-root files referenced from the book.
+    foreach ($file in @('EXAM_BLUEPRINT.md','SETUP.md','CONTRIBUTING.md','LICENSE')) {
+        $pattern = '\(' + [regex]::Escape($file) + '\)'
+        $Body    = $Body -replace $pattern, "($RepoBlobBase/$file)"
+    }
+
+    return $Body
+}
+
 # Map section id -> start index in the source text
 $ids       = @($sections.Keys)
 $positions = New-Object 'System.Collections.Generic.List[int]'
@@ -55,6 +87,9 @@ for ($idx = 0; $idx -lt $ids.Count; $idx++) {
 
     # Strip the leading anchor tag — mdBook auto-generates anchors from headings.
     $chunk = $chunk -replace "^<a id='$id'></a>\s*", ''
+
+    # Rewrite cross-references that would 404 in the rendered site.
+    $chunk = Rewrite-Links -Body $chunk
 
     $outPath = Join-Path $OutDir $meta.file
     Set-Content -LiteralPath $outPath -Value $chunk -Encoding UTF8

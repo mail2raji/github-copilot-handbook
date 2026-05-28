@@ -2,6 +2,33 @@
 
 > **You will:** install Git, GitHub CLI, VS Code, GitHub Copilot, and GitHub Copilot CLI, then prove they work by making your first commit and asking Copilot a question.
 
+### 🧒 If you were 10 years old
+
+Imagine you are building a giant Lego castle. Every time you finish a part, you take a photo of it. If you knock it over, you can rebuild it from the photo. **Git is the camera.** **GitHub is the cloud album** where the photos live, so you and your friends can both see them.
+
+- **Git** = the camera on your desk.
+- **GitHub** = the photo album online.
+- **GitHub Copilot** = a smart helper sitting next to you, suggesting which Lego brick to use next.
+- **GitHub Copilot CLI** = the same helper, but in the terminal — like a magic typewriter that knows commands.
+
+Once all four are installed, you can build, save, share, and get help — never alone.
+
+### 🌍 Real-world situation — when to use this
+
+**Situation:** You just joined a new team building a chatbot. The senior engineer says *"clone the repo, make your branch, push your first PR by end of week."* You panic — none of those words are in your vocabulary yet.
+
+**What this chapter does:** by the end of Setup, you can run all of these and they just work:
+
+```powershell
+git clone https://github.com/the-team/chatbot.git
+cd chatbot
+git switch -c feat/improve-greeting
+code .                            # opens the project; Copilot starts suggesting
+gh copilot suggest "create a Python venv and install requirements"
+```
+
+You are now ready to type, save, and ship code on day 1.
+
 ## 0.1 Install Git
 
 Git is the version-control engine. It is **local-first**: every commit happens on your laptop, before anything reaches GitHub.

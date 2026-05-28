@@ -6,6 +6,46 @@
 
 This chapter is also the **largest** because it owns the majority of the **GitHub Copilot certification**.
 
+### 🧒 If you were 10 years old
+
+Picture a **super-smart parrot sitting on your shoulder** while you draw and write.
+
+- When you start drawing a cat, the parrot whispers *"add whiskers like this!"* — that's **inline completion** (gray ghost text).
+- When you stop and ask *"hey parrot, what's a cool name for my cat?"*, the parrot answers — that's **Copilot Chat**.
+- When you say *"parrot, draw the whole cat by yourself, then bring it back for me to look at"*, the parrot flies off, does the work, and shows you the result — that's **Agent mode**.
+- When you say *"parrot, every time I draw, always use crayons not pencils"*, the parrot remembers — that's a **custom instructions file**.
+- When you keep a list of favorite drawings, the parrot can copy that exact style — that's a **prompt file**.
+
+The parrot is helpful, but **you are still the artist**: you decide what to keep.
+
+### 🌍 Real-world situation — when to use this
+
+**Situation:** You need to write a Python function that retrieves docs, asks an LLM to answer, and *also* writes a unit test. Three Copilot surfaces solve this in three minutes:
+
+```python
+# 1. INLINE COMPLETION — type the docstring; Copilot writes the body.
+def answer_question(query: str, top_k: int = 5) -> str:
+    """Retrieve top-k docs from Qdrant and ask GPT-4o-mini to answer the query.
+    Returns a citation-grounded answer.
+    """
+    # <Tab to accept Copilot's suggestion>
+    docs = qdrant.search(query, limit=top_k)
+    context = "\n\n".join(d.payload["text"] for d in docs)
+    prompt = f"Use ONLY this context:\n{context}\n\nQuestion: {query}"
+    return openai.chat.completions.create(
+        model="gpt-4o-mini",
+        messages=[{"role": "user", "content": prompt}],
+    ).choices[0].message.content
+```
+
+Then:
+
+- **Inline chat (`Ctrl+I`)** on the function → *"add citation numbers to every paragraph in the answer."* Copilot edits in-place.
+- **Side chat (`Ctrl+Alt+I`)** → *"write a pytest that mocks both Qdrant and OpenAI and asserts the citation count."* Copilot writes the test file.
+- **Agent mode** → *"add this feature end-to-end: update the API, write tests, update README, open a PR."* It plans, edits multiple files, and stops for your approval.
+
+The parrot doesn't *replace* you — it makes you 5× faster.
+
 ## 5.1 Plans and features — what you get
 
 | Plan | Audience | Includes |
@@ -279,7 +319,7 @@ GitHub's RAI commitments for Copilot, summarized:
 14. Who is accountable for code accepted from Copilot?
 15. Can Copilot Workspace generate, run, and commit code?
 
-Answers in [Phase5_Copilot_GenAI/exercises.md](Phase5_Copilot_GenAI/exercises.md).
+Answers in [Phase5_Copilot_GenAI/exercises.md](https://github.com/mail2raji/github-copilot-handbook/blob/main/Phase5_Copilot_GenAI/exercises.md).
 
 ## 5.14 Exercises (do all 12)
 

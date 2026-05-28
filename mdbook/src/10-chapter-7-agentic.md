@@ -4,6 +4,64 @@
 
 > **Scenario:** Your team has 10 internal tools (Jira, ServiceNow, Splunk, Snyk, internal APIs). Instead of writing a custom agent from scratch, you let Copilot's agent mode call them via MCP. Copilot becomes the cockpit; your repo + MCP servers become the toolbelt.
 
+### 🧒 If you were 10 years old
+
+Imagine you have a robot friend who is **really smart but has no hands**. You give the robot tools:
+
+- A **calculator** (for math).
+- A **dictionary** (for word meanings).
+- A **notepad** (for remembering).
+- A **walkie-talkie to mom** (for asking permission before doing big things).
+
+Now when you say, *"robot, do my math homework,"* the robot **plans** the steps, picks up the **calculator**, writes answers in the **notepad**, and if it's about to do something risky, **buzzes mom** first.
+
+That handing-out-tools system is called **MCP — the Model Context Protocol**. It is the same plug for *every* AI tool, so the robot doesn't need to relearn each one.
+
+- **Tool** = something the robot can *do* (e.g. "send email").
+- **Resource** = something the robot can *read* (e.g. "my homework PDF").
+- **Prompt** = a saved instruction (e.g. "always answer politely").
+- **Skill** = an instruction the robot picks up automatically when the situation matches.
+
+You go from a smart robot that just talks → a smart robot that **gets things done safely**.
+
+### 🌍 Real-world situation — when to use this
+
+**Situation:** When a new GitHub issue is opened in your team's repo, you want Copilot to: read the issue → check the codebase → suggest a label → assign to the right person — *without* you doing anything.
+
+Step 1 — register an MCP server in `.vscode/mcp.json`:
+
+```json
+{
+  "servers": {
+    "github": {
+      "command": "docker",
+      "args": ["run","-i","--rm","-e","GITHUB_PERSONAL_ACCESS_TOKEN","ghcr.io/github/github-mcp-server"],
+      "env": { "GITHUB_PERSONAL_ACCESS_TOKEN": "${input:gh_token}" }
+    }
+  }
+}
+```
+
+Step 2 — write a skill file Copilot picks up automatically:
+
+```markdown
+---
+name: triage-issue
+description: Triage a newly opened GitHub issue. Reads the issue, picks 1-3 labels, suggests assignee.
+---
+
+# Triage skill
+
+When the user asks to triage issue #N:
+
+1. Use the `github` MCP tool to read issue #N (title, body, comments).
+2. Read CODEOWNERS to find the right team.
+3. Pick 1-3 labels from: bug | feature | docs | question | needs-info.
+4. Post a comment summarizing your triage. **DO NOT** label or assign without my approval.
+```
+
+Step 3 — in Copilot Agent mode, just say: *"triage issue 42."* The agent plans, calls the GitHub tool, drafts the comment, and asks for your go-ahead before posting. You went from *manually triaging* to *one-line oversight*.
+
 ## 7.1 The agent loop — the only diagram you must memorize
 
 ```
@@ -266,7 +324,7 @@ You will build exactly this in **Capstone #2** in Chapter 10.
 11. Where is the chat mode config file?
 12. Name three real-world MCP servers you'd add to a GenAI workspace.
 
-Answers in [Phase7_Agentic_AI_Copilot/exercises.md](Phase7_Agentic_AI_Copilot/exercises.md).
+Answers in [Phase7_Agentic_AI_Copilot/exercises.md](https://github.com/mail2raji/github-copilot-handbook/blob/main/Phase7_Agentic_AI_Copilot/exercises.md).
 
 ## 7.12 Exercises (do all 10)
 

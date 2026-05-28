@@ -4,6 +4,55 @@
 
 Skip the entire chapter if you only need a pass with thin margin. Do it if you want to *defend* a design — at work and on the certification interview-style scenario questions.
 
+### 🧒 If you were 10 years old
+
+After you've learned a new instrument, you don't say *"I'm done"* — you give a **school concert**. That's the capstone.
+
+This chapter has **five concerts**. Each one is a real, complete project you can show a future boss, a teacher, or a friend. By the end you can point to GitHub and say, *"I built this — go look."*
+
+- Concert 1 = a full AI chatbot service.
+- Concert 2 = a robot that triages tickets while you sleep.
+- Concert 3 = a robot that reviews other people's code politely.
+- Concert 4 = a scoreboard that compares 4 different AI brains every night.
+- Concert 5 = a recipe book of AI tricks anyone can use.
+
+Finishing **one** concert means more than reading the whole book a second time.
+
+### 🌍 Real-world situation — when to use this
+
+**Situation:** You finished Phase 9 and the exam is scheduled. But your hiring manager asks, *"Cool, you passed the exam — but can you actually **build** anything?"* The capstones are your answer.
+
+Minimum viable plan to ship Capstone 1 (RAG service) in **one weekend**:
+
+```powershell
+# Saturday morning — scaffold (2h)
+mkdir doc-rag; cd doc-rag
+gh repo create mail2raji/doc-rag --public --source=. --push
+code .
+# In Copilot Agent mode: "scaffold a FastAPI app with /query and /healthz,
+#                         Dockerfile, pyproject.toml, tests/test_api.py."
+
+# Saturday afternoon — retrieval (3h)
+# Copilot: "add a Qdrant retriever in src/retriever.py with BM25 + embeddings."
+# Copilot: "add tests with mocked Qdrant."
+
+# Saturday evening — CI (1h)
+# Copilot: "add .github/workflows/ci.yml: pytest on push and PR, Python 3.12."
+git add .; git commit -m "feat: scaffold + retrieval"; git push
+
+# Sunday morning — eval + nightly (2h)
+# Copilot: "add scripts/eval.py + .github/workflows/eval-nightly.yml on cron."
+
+# Sunday afternoon — deploy (3h)
+# Copilot: "add infra/main.bicep for Container Apps, and a deploy.yml workflow
+#          that uses OIDC to login to Azure and runs az containerapp up."
+git add .; git commit -m "feat: eval, infra, deploy"; git push
+# Sunday night — tag a v0.1.0 release; share the GitHub URL with your manager.
+gh release create v0.1.0 --generate-notes
+```
+
+By Monday morning you have a working RAG service, on a public repo, with green CI and a v0.1.0 release. **You are now an engineer who shipped**, not a candidate who studied.
+
 ---
 
 ## Capstone 1 — Production RAG service on GitHub

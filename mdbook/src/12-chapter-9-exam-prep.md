@@ -4,6 +4,41 @@
 
 > **How to use:** read each question; commit to an answer *before* scrolling to the answers section. Score ≥ 80% to be ready; ≥ 90% to be confident.
 
+### 🧒 If you were 10 years old
+
+Taking a certification exam is like taking a **swimming test** to get the green wristband at the pool.
+
+- You **read about** swimming for weeks (the chapters).
+- You **practice** in the shallow end (the exercises).
+- You take a **mock test** with a parent watching — if you get most laps right, you're ready (these 150 questions).
+- The **real test** at the pool feels easy because you've already done harder ones at home.
+
+The mock exams in this chapter are the *parent-watching* step. Take them seriously: time yourself, no peeking, then review *every* mistake.
+
+### 🌍 Real-world situation — when to use this
+
+**Situation:** You scheduled the **GitHub Foundations** exam for next Saturday. You have 5 days. Here is your 5-day plan using Mock A:
+
+```text
+Mon (60 min) — Take Mock A under exam conditions (no peeking, no Google).
+                Score yourself honestly. Note every wrong answer.
+
+Tue (60 min) — Re-read ONLY the chapter sections that map to the wrong answers.
+                E.g. missed Q3 about staging? Re-read §1.1 "three trees".
+
+Wed (45 min) — Take Mock A AGAIN. Aim for +10% on yesterday's score.
+                If still < 80% on any topic, do that phase's exercises.md drills.
+
+Thu (60 min) — Run through Appendix A cheat sheets out loud.
+                Practice typing the top-20 git commands from memory.
+
+Fri ( 0 min) — REST. Do NOT cram. The brain consolidates overnight.
+
+Sat — Exam. You'll likely score 85-95%. Walk in calm.
+```
+
+The rhythm: *test → diagnose → fix → re-test → rest → ship.*
+
 ---
 
 ## 9.A Mock A — GitHub Foundations (30 Q)
