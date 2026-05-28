@@ -1,0 +1,31 @@
+[book]
+title       = "GitHub, Git & Copilot for GenAI / Agentic AI — The Hands-On Handbook"
+authors     = ["mail2raji"]
+description = "From zero to five GitHub certifications. Hands-on book with 100+ exercises, 150+ practice questions, and 5 production capstones — all focused on GenAI and Agentic AI engineering."
+src         = "mdbook/src"
+language    = "en"
+
+[output.html]
+default-theme         = "rust"
+preferred-dark-theme  = "navy"
+git-repository-url    = "https://github.com/mail2raji/github-copilot-handbook"
+edit-url-template     = "https://github.com/mail2raji/github-copilot-handbook/edit/main/{path}"
+copy-fonts            = true
+mathjax-support       = false
+no-section-label      = false
+
+[output.html.search]
+enable          = true
+limit-results   = 30
+use-boolean-and = true
+
+[output.html.fold]
+enable = true
+level  = 1
+
+[output.html.print]
+enable = true
+
+[build]
+build-dir      = "mdbook/book"
+create-missing = false
